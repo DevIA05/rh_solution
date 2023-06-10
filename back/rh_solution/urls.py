@@ -22,7 +22,6 @@ router = routers.DefaultRouter()
 router.register('persons', PersonViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
-    # Autres URLs de votre application
+    # Autres URLs de votre application...
+    path('api/', include(router.urls)),
 ]
-
