@@ -4,8 +4,9 @@ from .models import Person
 def import_csv_data(file_path):
     with open(file_path, 'r') as file:
         reader = csv.DictReader(file)
-        for row in reader:
+        for row, i in enumerate(reader), :
             person = Person(
+                id = i,
                 first_name=row['first_name'],
                 last_name=row['last_name'],
                 gender=row['gender'],

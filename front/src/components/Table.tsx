@@ -1,5 +1,8 @@
-import { Match, Switch, createResource, createSignal } from 'solid-js';
-import API  from './API';
+import { createResource, createSignal } from 'solid-js';
+import 'tailwindcss/tailwind.css';
+import 'daisyui/dist/full.css';
+
+import API from './API';
 
 interface Person {
   id: number;
@@ -12,49 +15,130 @@ interface Person {
 }
 
 const Table = () => {
-  
-  const [data] = createResource<Person[]>(API.getPersons);
+  const [data, { mutate }] = createResource<Person[]>(API.getPersons);
 
-  const handleRowClick = (index: number) => {
-    // Faire quelque chose avec les données de la ligne cliquée
-    console.log('Ligne cliquée :', index);
+  const addEntry = () => {
+    const newId = (data()?.length ?? 0) + 1;
+    const newEntry: Person = {
+      id: newId,
+      first_name: 'first_name',
+      last_name: 'last_name',
+      gender: 'gender',
+      phone_number: 'phone_number',
+      email: 'email',
+      email_personnal: 'email_personnal',
+    };
+    mutate((prevData) => [...(prevData || []), newEntry]);
+    API.addPerson(newEntry)
+  };
+
+  const deleteEntry = (id: number) => {
+    mutate((prevData) => prevData?.filter((entry) => entry.id !== id));
+  };
+
+  const updateField = (id: number, field: keyof Person, value: string) => {
+    mutate((prevData) =>
+      prevData?.map((entry) =>
+        entry.id === id ? { ...entry, [field]: value } : entry
+      )
+    );
   };
 
   return (
-    <div>
-   <div class="overflow-x-auto">
-      <table class="table">
-         <thead>
-            <tr>
-               <th>id</th>
-               <th>First name</th>
-               <th>Last name</th>
-               <th>gender</th>
-               <th>Phone number</th>
-               <th>email</th>
-               <th>email personnal</th>
-               <th></th>
+    <div class="p-4">
+      <div class="flex justify-between mb-4">
+        <h2 class="text-lg font-semibold">CRUD Table</h2>
+        <button class="btn btn-primary" onClick={addEntry}>
+          Add Entry
+        </button>
+      </div>
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>first name</th>
+            <th>last name</th>
+            <th>gender</th>
+            <th>phone_number</th>
+            <th>email</th>
+            <th>email personnal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data()?.map((entry) => (
+            <tr data-key={entry.id}>
+              <td>
+                <input
+                  type="text"
+                  class="input input-bordered w-full"
+                  value={entry.id}
+                  onInput={(e) =>
+                    updateField(entry.id, 'id', e.target.value)
+                  }
+                />
+              </td>
+              <td>
+                <input type="text" class="input input-bordered w-full"
+                value={entry.first_name}
+                  onInput={(e) =>
+                    updateField(entry.id, 'first_name', e.target.value)
+                  }
+                />
+              </td>
+              <td>
+                <input type="text" class="input input-bordered w-full"
+                value={entry.last_name}
+                  onInput={(e) =>
+                    updateField(entry.id, 'last_name', e.target.value)
+                  }
+                />
+              </td>
+              <td>
+                <input type="text" class="input input-bordered w-full"
+                value={entry.gender}
+                  onInput={(e) =>
+                    updateField(entry.id, 'gender', e.target.value)
+                  }
+                />
+              </td>
+              <td>
+                <input type="text" class="input input-bordered w-full"
+                value={entry.phone_number}
+                  onInput={(e) =>
+                    updateField(entry.id, 'phone_number', e.target.value)
+                  }
+                />
+              </td>
+              <td>
+                <input type="text" class="input input-bordered w-full"
+                value={entry.email}
+                  onInput={(e) =>
+                    updateField(entry.id, 'email', e.target.value)
+                  }
+                />
+              </td>
+              <td>
+                <input type="text" class="input input-bordered w-full"
+                value={entry.email_personnal}
+                  onInput={(e) =>
+                    updateField(entry.id, 'email_personnal', e.target.value)
+                  }
+                />
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary mr-2"
+                  onClick={() => deleteEntry(entry.id)}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
-         </thead>
-         <tbody>
-         {/* -- row 1 -- */}
-         {data()?.map((person, index) => (
-         <tr data-key={index} onClick={() => handleRowClick(index)}>
-            <td>{person.id}</td>
-            <td>{person.first_name}</td>
-            <td>{person.last_name}</td>
-            <td>{person.gender}</td>
-            <td>{person.phone_number}</td>
-            <td>{person.email}</td>
-            <td>{person.email_personnal}</td>
-            <td></td>
-        </tr>
-         ))}
-         </tbody>
+          ))}
+        </tbody>
       </table>
-   </div>
-</div>
-)};
-
+    </div>
+  );
+};
 
 export default Table;
