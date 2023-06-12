@@ -21,12 +21,12 @@ const Table = () => {
     const newId = (data()?.length ?? 0) + 1;
     const newEntry: Person = {
       id: newId,
-      first_name: 'first_name',
-      last_name: 'last_name',
-      gender: 'gender',
-      phone_number: 'phone_number',
-      email: 'email',
-      email_personnal: 'email_personnal',
+      first_name: '',
+      last_name: '',
+      gender: '',
+      phone_number: '',
+      email: '',
+      email_personnal: '',
     };
     mutate((prevData) => [...(prevData || []), newEntry]);
     API.addPerson(newEntry)

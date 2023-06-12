@@ -103,6 +103,7 @@ async function addPerson(personData: any) {
     });
   const data = await response.json();
   console.log("Nouvelle personne ajoutée :", data);
+  return data
 }
 
 const API = {

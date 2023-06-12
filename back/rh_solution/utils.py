@@ -1,12 +1,14 @@
 import csv
-from .models import Person
+from rh_solution.models import Person
+#import os
+#print(os.getcwd())
 
 def import_csv_data(file_path):
     with open(file_path, 'r') as file:
         reader = csv.DictReader(file)
-        for row, i in enumerate(reader), :
+        for i, row in enumerate(reader):
             person = Person(
-                id = i,
+                id=i,
                 first_name=row['first_name'],
                 last_name=row['last_name'],
                 gender=row['gender'],
@@ -15,3 +17,4 @@ def import_csv_data(file_path):
                 email_personnal=row['email_personnal']
             )
             person.save()
+#import_csv_data("../data/data.csv")
