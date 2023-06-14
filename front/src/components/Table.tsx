@@ -34,14 +34,18 @@ const Table = () => {
 
   const deleteEntry = (id: number) => {
     mutate((prevData) => prevData?.filter((entry) => entry.id !== id));
+    API.removePerson(id)
   };
 
-  const updateField = (id: number, field: keyof Person, value: string) => {
+  const updateField = (id: number, field: keyof Person, value: string, index: number) => {
     mutate((prevData) =>
       prevData?.map((entry) =>
         entry.id === id ? { ...entry, [field]: value } : entry
-      )
-    );
+      ));
+    const dataArray = data();
+    if (dataArray && dataArray.length > index) { 
+      API.editPerson(id,dataArray[index])
+     }    
   };
 
   return (
@@ -65,64 +69,51 @@ const Table = () => {
           </tr>
         </thead>
         <tbody>
-          {data()?.map((entry) => (
+          {data()?.map((entry, index) => (
             <tr data-key={entry.id}>
               <td>
-                <input
-                  type="text"
-                  class="input input-bordered w-full"
-                  value={entry.id}
-                  onInput={(e) =>
-                    updateField(entry.id, 'id', e.target.value)
-                  }
-                />
+                <span> {entry.id} </span>                
               </td>
               <td>
                 <input type="text" class="input input-bordered w-full"
                 value={entry.first_name}
-                  onInput={(e) =>
-                    updateField(entry.id, 'first_name', e.target.value)
-                  }
+                onBlur={(e) =>
+                  updateField(entry.id, 'first_name', e.target.value, index)}
                 />
               </td>
               <td>
                 <input type="text" class="input input-bordered w-full"
                 value={entry.last_name}
-                  onInput={(e) =>
-                    updateField(entry.id, 'last_name', e.target.value)
-                  }
+                onBlur={(e) =>
+                  updateField(entry.id, 'last_name', e.target.value, index)}
                 />
               </td>
               <td>
                 <input type="text" class="input input-bordered w-full"
                 value={entry.gender}
-                  onInput={(e) =>
-                    updateField(entry.id, 'gender', e.target.value)
-                  }
+                onBlur={(e) =>
+                  updateField(entry.id, 'gender', e.target.value, index)}
                 />
               </td>
               <td>
                 <input type="text" class="input input-bordered w-full"
                 value={entry.phone_number}
-                  onInput={(e) =>
-                    updateField(entry.id, 'phone_number', e.target.value)
-                  }
+                onBlur={(e) =>
+                  updateField(entry.id, 'phone_number', e.target.value, index)}
                 />
               </td>
               <td>
                 <input type="text" class="input input-bordered w-full"
                 value={entry.email}
-                  onInput={(e) =>
-                    updateField(entry.id, 'email', e.target.value)
-                  }
+                onBlur={(e) =>
+                  updateField(entry.id, 'email', e.target.value, index)}
                 />
               </td>
               <td>
                 <input type="text" class="input input-bordered w-full"
                 value={entry.email_personnal}
-                  onInput={(e) =>
-                    updateField(entry.id, 'email_personnal', e.target.value)
-                  }
+                onBlur={(e) =>
+                  updateField(entry.id, 'email_personnal', e.target.value, index)}
                 />
               </td>
               <td>
