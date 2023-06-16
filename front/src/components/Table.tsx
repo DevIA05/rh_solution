@@ -1,4 +1,4 @@
-import { createResource, createSignal } from 'solid-js';
+import { createEffect, createResource, createSignal } from 'solid-js';
 import 'tailwindcss/tailwind.css';
 import 'daisyui/dist/full.css';
 
@@ -15,8 +15,11 @@ interface Person {
 }
 
 const Table = () => {
+
+  // Get Data ------------------------------------------------------------------------------
   const [data, { mutate }] = createResource<Person[]>(API.getPersons);
 
+  // Méthodes CRUD Table -------------------------------------------------------------------
   const addEntry = () => {
     const newId = (data()?.length ?? 0) + 1;
     const newEntry: Person = {
@@ -48,14 +51,39 @@ const Table = () => {
      }    
   };
 
+  // Search -----------------------------------------------------------------------------------
+  const [searchValue, setSearchValue] = createSignal("");
+  const [filteredData, setFilteredData] = createSignal<Person[]>([]);
+
+  const handleSearchChange = (event: any) => {
+    setSearchValue(event.target.value);
+  };
+
+  createEffect(() => {
+    const search = searchValue().toLowerCase();
+    const newData = data()?.filter(
+      (person) =>
+        person.first_name.toLowerCase().includes(search) ||
+        person.last_name.toLowerCase().includes(search) ||
+        person.email.toLowerCase().includes(search)
+    );
+
+    setFilteredData(newData ?? []);
+  });
+  
+  
+
   return (
     <div class="p-4">
-      <div class="flex justify-between mb-4">
+      <div class="flex items-center justify-between mb-2">
         <h2 class="text-lg font-semibold">CRUD Table</h2>
-        <button class="btn btn-primary" onClick={addEntry}>
-          Add Entry
+        <div class="flex items-center justify-center flex-grow">
+          <input type="text" value={searchValue()} onInput={handleSearchChange} placeholder="Rechercher..." />
+        </div>
+        <button class="fixed top-0 right-0 z-50 w-20 h-20 rounded-bl-full flex items-center justify-center bg-emerald-700" onClick={addEntry}>
+          <span class="transform rotate-45">Add Entry</span>
         </button>
-      </div>
+      </div> 
       <table class="table w-full">
         <thead>
           <tr>
@@ -69,7 +97,7 @@ const Table = () => {
           </tr>
         </thead>
         <tbody>
-          {data()?.map((entry, index) => (
+        {filteredData()?.map((entry, index) => (
             <tr data-key={entry.id}>
               <td>
                 <span> {entry.id} </span>                
@@ -133,3 +161,7 @@ const Table = () => {
 };
 
 export default Table;
+function computed(arg0: () => Person[] | undefined) {
+  throw new Error('Function not implemented.');
+}
+
