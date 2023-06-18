@@ -1,0 +1,5 @@
+ Dockeriser une application Django et PostgreSQL 
+ https://www.youtube.com/watch?v=6UUmvUT4ONk
+
+FRONT
+ https://www.youtube.com/watch?v=QePBbG5MoKk

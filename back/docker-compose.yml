@@ -1,0 +1,27 @@
+version: '3'
+networks:
+  monreseau:
+    external: false
+services:
+  web:
+    build: .
+    container_name: backend_rh_solution
+    depends_on:
+      - db
+    networks:
+      - monreseau
+    ports:
+      - 8000:8000
+
+  db:
+    image: 'postgres:latest'
+    container_name: rh_solution_db
+    environment:
+      POSTGRES_PASSWORD: 0000
+    volumes:
+      - pgdb:/var/lib/postgresql/data
+    networks:
+      - monreseau
+
+volumes:
+  pgdb:
