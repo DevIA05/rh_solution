@@ -17,4 +17,4 @@ def import_csv_data(file_path):
                 email_personnal=row['email_personnal']
             )
             person.save()
-#import_csv_data("../data/data.csv")
+import_csv_data("../data/data.csv")

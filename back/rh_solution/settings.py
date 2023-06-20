@@ -88,7 +88,7 @@ DATABASES = {
         'NAME': 'rh_solution', 
         'USER': 'postgres',
         'PASSWORD': '0000',
-        'HOST': 'db', 
+        'HOST': 'database', 
         'PORT': '5432',
     }   
 }
